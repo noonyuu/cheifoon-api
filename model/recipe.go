@@ -28,5 +28,5 @@ func FindRecipe(id int) ([]Recipe, error) {
     if err != nil {
         return nil, err
     }
-    return &recipe, nil
+    return recipe, nil
 }
