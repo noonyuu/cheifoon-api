@@ -16,8 +16,8 @@ type Menu struct {
 }
 
 
-func CreateMenu(menu *model.Menu) error {
-    return db.Create(menu).Error
+func CreateMenu(menu *Menu) {
+	db.Create(menu)
 }
 
 func FindMenu(user_id *int, recipe_id *int) ([]Menu, error) {
