@@ -32,7 +32,7 @@ func main() {
 	// }))
 
   // ルートを設定
-  e.GET("/", hello) // ローカル環境の場合、http://localhost:1323/ にGETアクセスされるとhelloハンドラーを実行する
+  e.GET("/", hello)
 	e.GET("/reset", handler.ResetGET)
 	// e.POST("/user/add", handler.UserAddPOST)
 	e.POST("/seasoning/add", handler.SeasoningAddPOST)
@@ -40,6 +40,8 @@ func main() {
 	e.GET("/recipe/view/:id", handler.RecipeViewGET)
 	e.POST("/menu/add", handler.MenuAddPOST)
 	e.GET("/menu/view/:uid/:rid", handler.MenuViewGET)
+	e.GET("/getImage/:get", handler.GetImage)
+	// e.GET("/image/up", handler.ImageUpload)
 
   // サーバーをポート番号1323で起動
   e.Logger.Fatal(e.Start(":8081"))
@@ -49,3 +51,58 @@ func main() {
 func hello(c echo.Context) error {
   return c.String(http.StatusOK, "Hello, World!")
 }
+
+// package main
+
+// import (
+//     "fmt"
+//     "net/http"
+//     "github.com/labstack/echo"
+//     "github.com/labstack/echo/middleware"
+//     "os" // osパッケージを追加
+//     "io" // ioパッケージを追加
+// )
+
+// func main() {
+//     e := echo.New()
+    
+//     // ミドルウェアを設定（CORS対応など）
+//     e.Use(middleware.CORS())
+    
+//     // 画像アップロードのハンドラ
+//     e.POST("/upload-image", uploadImage)
+    
+//     e.Start(":8081")
+// }
+
+// func uploadImage(c echo.Context) error {
+// 		fmt.Println("s")
+//     // アップロードされた画像を取得
+//     file, err := c.FormFile("image")
+//     if err != nil {
+//         return err
+//     }
+    
+//     // アップロードされた画像を保存
+//     src, err := file.Open()
+//     if err != nil {
+//         return err
+//     }
+//     defer src.Close()
+
+//     // 保存先のファイルパスを指定
+//     dst, err := os.Create("/public/uploads/" + file.Filename)
+//     if err != nil {
+//         return err
+//     }
+//     defer dst.Close()
+    
+//     // ファイルのコピー
+//     if _, err = io.Copy(dst, src); err != nil {
+//         return err
+//     }
+
+//     // ここでデータベースにファイルのパスやメタデータを保存する処理を実装
+    
+//     return c.String(http.StatusOK, "画像がアップロードされました")
+// }

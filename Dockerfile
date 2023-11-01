@@ -2,8 +2,10 @@ FROM golang
 
 WORKDIR /api
 
-# COPY . .
+RUN mkdir -p public/uploads
 
-# RUN go build -o main .
+COPY . .
 
-# CMD ["./main"]
+RUN go build -o main .
+
+CMD ["./main"]
