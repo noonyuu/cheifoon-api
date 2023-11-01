@@ -7,6 +7,7 @@ type Recipe struct {
 	ID       		int     `gorm:"primary_key;type:int"`
 	UserId      int     `json:"user_id" gorm:"primary_key;type:int"`
 	RecipeName 	string  `json:"recipe_name" gorm:"type:varchar(255);not null"`
+	// MenuImage 	string  `json:"menu_image" gorm:"type:LONGBLOB;not null"`
 	MenuImage 	string  `json:"menu_image" gorm:"type:varchar(255);not null"`
 	User 				User 		`json:"users" gorm:"foreignKey:user_id"`
 }
@@ -28,5 +29,18 @@ func FindRecipe(id int) ([]Recipe, error) {
     if err != nil {
         return nil, err
     }
-    return &recipe, nil
+    return recipe, nil
+}
+
+func MaxId(user_id int) (*uint, error) {
+    var maxId uint
+    err := db.Table("recipes").
+        Select("MAX(id)").
+        Where("user_id = ?", user_id).
+        Scan(&maxId).
+        Error
+    if err != nil {
+        return nil, err
+    }
+    return &maxId, nil
 }
