@@ -7,7 +7,8 @@ import (
 
 type Recipe struct {
 	gorm.Model
-	UserId     int   `json:"user_id" gorm:"not null"`
+	ID				 int		`gorm:"primary_key:type:int"`
+	UserId     int    `json:"user_id" gorm:"not null"`
 	RecipeName string `json:"recipe_name" gorm:"type:varchar(255);not null"`
 	MenuImage  string `json:"menu_image" gorm:"type:varchar(255);not null"`
 	User       User   `json:"users" gorm:"foreignKey:user_id"`
