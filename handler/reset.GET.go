@@ -38,10 +38,19 @@ func ResetGET(c echo.Context) error {
 	reset("omuraisu","11")
 	model.CreateRecipe(&model.Recipe{UserId: 1, RecipeName: "ハンバーグ", MenuImage: "12.jpg"})
 	reset("hamburg","12")
+	model.CreateRecipe(&model.Recipe{UserId: 1, RecipeName: "カレー", MenuImage: "13.jpg"})
+	reset("curry","13")
+	model.CreateRecipe(&model.Recipe{UserId: 1, RecipeName: "ラーメン", MenuImage: "14.jpg"})
+	reset("ramen","14")
 
 	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 1,SeasoningId: 1,TableSpoon: 1,TeaSpoon: 1})
 	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 1,SeasoningId: 2,TableSpoon: 1,TeaSpoon: 2})
 	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 2,SeasoningId: 3,TableSpoon: 2,TeaSpoon: 1})
+	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 3,SeasoningId: 1,TableSpoon: 3,TeaSpoon: 0})
+	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 3,SeasoningId: 2,TableSpoon: 1,TeaSpoon: 1})
+	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 3,SeasoningId: 3,TableSpoon: 0,TeaSpoon: 2})
+	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 4,SeasoningId: 1,TableSpoon: 3,TeaSpoon: 0})
+	model.CreateMenu(&model.Menu{UserId: 1, RecipeId: 4,SeasoningId: 2,TableSpoon: 0,TeaSpoon: 1})
 
 	return c.JSON(http.StatusOK, "reset")
 }
