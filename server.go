@@ -16,6 +16,13 @@ func main() {
   // インスタンスを作成
   e := echo.New()
 
+		// CORSの設定
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"}, // Reactアプリケーションのアドレス
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+
   // ミドルウェアを設定
   e.Use(middleware.Logger())
   e.Use(middleware.Recover())
@@ -41,68 +48,14 @@ func main() {
 	e.POST("/menu/add", handler.MenuAddPOST)
 	e.GET("/menu/view/:uid/:rid", handler.MenuViewGET)
 	e.GET("/getImage/:get", handler.GetImage)
+	e.POST("/room/add", handler.RoomAddPOST)
+	e.GET("/roomId/duplicateCheck/:id", handler.RoomIDuplicationCheckGET)
 	// e.GET("/image/up", handler.ImageUpload)
 
-  // サーバーをポート番号1323で起動
   e.Logger.Fatal(e.Start(":8081"))
 }
 
 // ハンドラーを定義
 func hello(c echo.Context) error {
-  return c.String(http.StatusOK, "Hello, World!")
+  return c.String(http.StatusOK, "いちごたべさせろ〜")
 }
-
-// package main
-
-// import (
-//     "fmt"
-//     "net/http"
-//     "github.com/labstack/echo"
-//     "github.com/labstack/echo/middleware"
-//     "os" // osパッケージを追加
-//     "io" // ioパッケージを追加
-// )
-
-// func main() {
-//     e := echo.New()
-    
-//     // ミドルウェアを設定（CORS対応など）
-//     e.Use(middleware.CORS())
-    
-//     // 画像アップロードのハンドラ
-//     e.POST("/upload-image", uploadImage)
-    
-//     e.Start(":8081")
-// }
-
-// func uploadImage(c echo.Context) error {
-// 		fmt.Println("s")
-//     // アップロードされた画像を取得
-//     file, err := c.FormFile("image")
-//     if err != nil {
-//         return err
-//     }
-    
-//     // アップロードされた画像を保存
-//     src, err := file.Open()
-//     if err != nil {
-//         return err
-//     }
-//     defer src.Close()
-
-//     // 保存先のファイルパスを指定
-//     dst, err := os.Create("/public/uploads/" + file.Filename)
-//     if err != nil {
-//         return err
-//     }
-//     defer dst.Close()
-    
-//     // ファイルのコピー
-//     if _, err = io.Copy(dst, src); err != nil {
-//         return err
-//     }
-
-//     // ここでデータベースにファイルのパスやメタデータを保存する処理を実装
-    
-//     return c.String(http.StatusOK, "画像がアップロードされました")
-// }
