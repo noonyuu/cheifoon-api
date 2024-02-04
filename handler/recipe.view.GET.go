@@ -11,7 +11,7 @@ import (
 func RecipeViewGET(c echo.Context) error {
     idStr := c.Param("id")
     
-    // id を string から int に変換
+    // idをstringからintに変換
     id, err := strconv.Atoi(idStr)
     if err != nil {
         return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -19,7 +19,6 @@ func RecipeViewGET(c echo.Context) error {
         })
     }
 
-    // FindRecipe 関数を修正して int を受け取るように変更
     recipe, err := model.FindRecipe(id)
     if err != nil {
         // エラーが発生した場合のハンドリング

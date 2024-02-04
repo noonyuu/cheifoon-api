@@ -13,15 +13,15 @@ import (
 
 func RecipeAddPOST(c echo.Context) error {
 	// 画像ファイルを取得
-	file, err := c.FormFile("menu_image")
+	file, err := c.FormFile("recipe_image")
 	if err != nil {
 		c.Logger().Error(err)
 		return err
 	}
 
 	// フォームデータからユーザーIDとレシピ名を取得
-	userIdStr := c.FormValue("user_id")
-	userId, err := strconv.Atoi(userIdStr)
+	roomIdStr := c.FormValue("id")
+	roomId, err := strconv.Atoi(roomIdStr)
 	if err != nil {
 		c.Logger().Error(err)
 		return err
@@ -30,29 +30,30 @@ func RecipeAddPOST(c echo.Context) error {
 
 	// レシピデータを作成
 	addRecipe := &model.Recipe{
-		UserId:     userId,
+		RoomID:     roomId,
 		RecipeName: recipeName,
-		MenuImage:  file.Filename, // 仮のファイル名
+		RecipeImage:  file.Filename, // 仮のファイル名
 	}
 
-	fmt.Println(addRecipe.UserId)
+	fmt.Println(addRecipe.RoomID)
 	// レシピ表のIDの最大値を取得
-	maxID, err := model.MaxId(addRecipe.UserId)
+	maxID, err := model.MaxId()
 	if err != nil {
 		c.Logger().Error(err)
 		return err
 	}
 	// 新データ挿入時の仮ID
-	tmpID := *maxID + 1
+	tmpID := maxID + 1
 
-	// menuImageのファイル名ようにintからstringへ変換
-	userID := strconv.FormatUint(uint64(addRecipe.UserId), 10)
+	// RecipeImageのファイル名ようにintからstringへ変換
+	roomID := strconv.FormatUint(uint64(addRecipe.RoomID), 10)
+	// roomID := addRecipe.RoomID
   recipeID := strconv.FormatUint(uint64(tmpID), 10)
 
-	// menuImageを退避
-	// tmp := addRecipe.MenuImage
-  // MenuImage を文字列として結合
-	addRecipe.MenuImage = userID + recipeID + ".jpg"
+	// RecipeImageを退避
+	// tmp := addRecipe.RecipeImage
+  // RecipeImage を文字列として結合
+	addRecipe.RecipeImage = roomID + recipeID + ".jpg"
 	// レシピを追加
 	err = model.CreateRecipe(addRecipe)
 	if err != nil {
@@ -60,8 +61,8 @@ func RecipeAddPOST(c echo.Context) error {
 		return err
 	}
 
-	if addRecipe.MenuImage != "" {
-		err := ImageUpload(c, file, addRecipe.MenuImage)
+	if addRecipe.RecipeImage != "" {
+		err := ImageUpload(c, file, addRecipe.RecipeImage)
 		if err != nil {
 			c.Logger().Error(err)
 			return err
@@ -75,7 +76,7 @@ func RecipeAddPOST(c echo.Context) error {
 	}
 
   return c.JSON(http.StatusCreated, response)
-  
+
 }
 
 
@@ -88,7 +89,7 @@ func RecipeAddPOST(c echo.Context) error {
 //         return err
 //     }
 		
-// 		fmt.Println("user_id",addRecipe.UserId)
+// 		fmt.Println("room_id",addRecipe.RoomID)
 
 // 		var err error
 //     err = model.CreateRecipe(addRecipe)
@@ -107,11 +108,11 @@ func RecipeAddPOST(c echo.Context) error {
 //   //   if err != nil {
 //   //       return err
 //   //   }
-// 	user, err := c.FormFile("user_id")
+// 	room, err := c.FormFile("room_id")
 //     if err != nil {
 //         return err
 //     }
-// 	fmt.Println("aiueo",user)
+// 	fmt.Println("aiueo",room)
 // 	// レシピデータを取得
 // 	addRecipe := new(model.Recipe)
 // 	if err := c.Bind(addRecipe); err != nil {
@@ -120,20 +121,20 @@ func RecipeAddPOST(c echo.Context) error {
 // 	}
 
 // 	// // レシピ表のIDの最大値を取得
-// 	// maxID, err := model.MaxId(addRecipe.UserId)
+// 	// maxID, err := model.MaxId(addRecipe.RoomID)
 // 	// if err != nil {
 // 	// 	c.Logger().Error(err)
 // 	// 	return err
 // 	// }
 // 	// tmpID := *maxID + 1
 
-// 	// userID := strconv.FormatUint(uint64(addRecipe.UserId), 10)
+// 	// roomID := strconv.FormatUint(uint64(addRecipe.RoomID), 10)
 //   // recipeID := strconv.FormatUint(uint64(tmpID), 10)
 
-// 	// // menuImageを退避
-// 	// tmp := addRecipe.MenuImage
-//   // // MenuImage を文字列として結合
-// 	// addRecipe.MenuImage = userID + recipeID + ".jpg"
+// 	// // RecipeImageを退避
+// 	// tmp := addRecipe.RecipeImage
+//   // // RecipeImage を文字列として結合
+// 	// addRecipe.RecipeImage = roomID + recipeID + ".jpg"
 // 	// fmt.Println("name" , tmp)
 // 	// // レシピを追加
 // 	err = model.CreateRecipe(addRecipe)
@@ -143,8 +144,8 @@ func RecipeAddPOST(c echo.Context) error {
 // 	}
 // 	// fmt.Println("name" , reflect.TypeOf(tmp))
 // 	// fmt.Println(addRecipe.ID)
-// 	// if addRecipe.MenuImage != "" {
-// 	// 	err := ImageUpload(c, uint(addRecipe.ID), string(addRecipe.MenuImage), uint(addRecipe.UserId))
+// 	// if addRecipe.RecipeImage != "" {
+// 	// 	err := ImageUpload(c, uint(addRecipe.ID), string(addRecipe.RecipeImage), uint(addRecipe.RoomID))
 // 	// 	if err != nil {
 // 	// 		c.Logger().Error(err)
 // 	// 		return err
