@@ -18,16 +18,22 @@ func OpenDB() {
 }
 
 func Migrate() {
-	db.AutoMigrate(&AdminSeasoning{},&UserSeasoning{},&Recipe{},&Menu{},&User{})
+    db.AutoMigrate(&SeasoningStatus{},&Room{}, &Recipe{},&AdminSeasoning{},&UserSeasoning{},&RecipeInfo{},&Machine{})
+    // db.Model(&Recipe{}).AddForeignKey("room_id", "rooms(room_id)", "RESTRICT", "RESTRICT")
 }
+		// ,&Recipe{},&RecipeInfo{},&User{},&Machine{}
+	// &AdminSeasoning{},&UserSeasoning{},&Room{},&Recipe{},&RecipeInfo{}
 
 func DeleteDB() {
 	// テーブルを削除
-	db.Migrator().DropTable(&AdminSeasoning{})
 	db.Migrator().DropTable(&UserSeasoning{})
+	db.Migrator().DropTable(&RecipeInfo{})
+	db.Migrator().DropTable(&AdminSeasoning{})
 	db.Migrator().DropTable(&Recipe{})
-	db.Migrator().DropTable(&Menu{})
-	db.Migrator().DropTable(&User{})
+	// db.Migrator().DropTable(&User{})
+	// db.Migrator().DropTable(&Room{})
+	db.Migrator().DropTable(&Machine{})
+	db.Migrator().DropTable(&SeasoningStatus{})
 }
 
 func NewDBConnection() (*gorm.DB, error) {

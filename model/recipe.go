@@ -7,11 +7,10 @@ import (
 
 type Recipe struct {
 	gorm.Model
-	ID				 int		`gorm:"primary_key:type:int"`
-	UserId     int    `json:"user_id" gorm:"not null"`
-	RecipeName string `json:"recipe_name" gorm:"type:varchar(255);not null"`
-	MenuImage  string `json:"menu_image" gorm:"type:varchar(255);not null"`
-	User       User   `json:"users" gorm:"foreignKey:user_id"`
+	RecipeName  string `json:"recipe_name" gorm:"type:varchar(255);not null"`
+	RoomID      int `json:"room_id" gorm:"type:int;not null"`
+	// Room        Room   `gorm:"foreignKey:RoomID"`
+	RecipeImage string `json:"recipe_image" gorm:"type:varchar(255);not null"`
 }
 
 func CreateRecipe(recipe *Recipe) error {
@@ -24,9 +23,10 @@ func CreateRecipe(recipe *Recipe) error {
 
 func FindRecipe(id int) ([]Recipe, error) {
 	var recipe []Recipe
+	// nub := "cheifoon"
 	err := db.Table("recipes").
-		Select("id, user_id, recipe_name, menu_image").
-		Where("user_id = ?", id).
+		Select("id, room_id, recipe_name, recipe_image").
+		Where("room_id = ?", id).
 		Scan(&recipe).Error
 	if err != nil {
 		return nil, err
@@ -34,18 +34,18 @@ func FindRecipe(id int) ([]Recipe, error) {
 	return recipe, nil
 }
 
-func MaxId(user_id int) (*uint, error) {
-	var maxId uint
+func MaxId() (int, error) {
+	var maxId int
 	err := db.Table("recipes").
-		Select("COALESCE(MAX(id), 0)").
-		Where("user_id = ?", user_id).
+		Select("COALESCE(COUNT(id), 0)").
+		// Where("room_id = ?", room_id).
 		Scan(&maxId).
 		Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return &maxId, nil
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return 0, nil
+        }
+        return 0, err
+    }
+    return maxId, nil
 }
