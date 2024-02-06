@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// レシピをセットする
 func SetMachinePOST(c echo.Context) error {
 
 	machine := new(model.Machine)

@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// セットされているレシピの情報を取得
 func MachineInfoGET(c echo.Context) error {
 	roomIdStr := c.Param("room_id")
 	recipeIdStr := c.Param("recipe_id")

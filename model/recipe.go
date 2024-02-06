@@ -23,7 +23,6 @@ func CreateRecipe(recipe *Recipe) error {
 
 func FindRecipe(id int) ([]Recipe, error) {
 	var recipe []Recipe
-	// nub := "cheifoon"
 	err := db.Table("recipes").
 		Select("id, room_id, recipe_name, recipe_image").
 		Where("room_id = ?", id).

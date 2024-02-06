@@ -10,7 +10,7 @@ type Machine struct {
 	Recipe        Recipe     `json:"-" gorm:"foreignKey:RecipeId"`
 	RecipeName    string     `json:"recipe_name" gorm:"-"`
 	SeasoningName string     `json:"seasoning_name" gorm:"-"`
-	SeasoningStatus int   `json:"seasoning_status" gorm"-"`
+	SeasoningStatus int   	 `json:"seasoning_status" gorm"-"`
 	TableSpoon    int        `json:"table_spoon" gorm:"-"`
 	TeaSpoon      int        `json:"tea_spoon" gorm:"-"`
 }
@@ -56,7 +56,7 @@ func FindMachineRecipe(roomId int) (map[int]string, error) {
     // レシピIDとレシピ名を取得するクエリを実行
     rows, err := db.Raw("SELECT machines.recipe_id, recipes.recipe_name FROM machines "+
         "LEFT JOIN recipes ON machines.recipe_id = recipes.id "+
-        "WHERE machines.room_id = ?", roomId).Rows()
+        "WHERE machines.room_id = ? AND machines.deleted_at IS NULL", roomId).Rows()
     if err != nil {
         return nil, err
     }
@@ -76,4 +76,43 @@ func FindMachineRecipe(roomId int) (map[int]string, error) {
     }
 
     return recipeIDToName, nil
+}
+
+func FindMachineMobile(roomId int) ([]map[string]interface{}, error) {
+    rows, err := db.Raw("SELECT machines.recipe_id, recipes.recipe_name, recipes.recipe_image FROM machines "+
+        "LEFT JOIN recipes ON machines.recipe_id = recipes.id "+
+        "WHERE machines.room_id = ? AND machines.deleted_at IS NULL", roomId).Rows()
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var machines []map[string]interface{}
+
+    // 各行を反復処理し、機械の情報を取得し、mapに追加
+    for rows.Next() {
+        var recipeID int
+        var recipeName, recipeImage string
+        if err := rows.Scan(&recipeID, &recipeName, &recipeImage); err != nil {
+            return nil, err
+        }
+        machine := map[string]interface{}{
+            "ID":           recipeID,
+            "recipe_name":  recipeName,
+            "recipe_image": recipeImage,
+        }
+        machines = append(machines, machine)
+    }
+
+    return machines, nil
+}
+
+func DeleteRecipe(recipeId int) (error) {
+	err := db.Where("recipe_id = ?", recipeId).
+			Delete(&Machine{}).Error
+
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// レシピの名前を取得(機械用)
 func MachineRecipeNameGET(c echo.Context) error {
 	roomIdStr := c.Param("room_id")
     
