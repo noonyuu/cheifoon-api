@@ -54,6 +54,8 @@ func main() {
 	e.POST("/machine/set", handler.SetMachinePOST)
 	e.GET("/machine/get/:room_id/:recipe_id", handler.MachineInfoGET)
 	e.GET("/machine/get/:room_id", handler.MachineRecipeNameGET)
+	e.GET("/machine/mobile/get/:room_id", handler.MachineUseMobileGET)
+	e.DELETE("/machine/delete/:recipe_id", handler.MachineDELETE)
 	// e.GET("/image/up", handler.ImageUpload)
 
   e.Logger.Fatal(e.Start(":8081"))
