@@ -20,7 +20,7 @@ func RecipeAddPOST(c echo.Context) error {
 	}
 
 	// フォームデータからユーザーIDとレシピ名を取得
-	roomIdStr := c.FormValue("id")
+	roomIdStr := c.FormValue("room_id")
 	roomId, err := strconv.Atoi(roomIdStr)
 	if err != nil {
 		c.Logger().Error(err)
